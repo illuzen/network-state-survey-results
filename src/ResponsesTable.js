@@ -3,9 +3,8 @@ import { Space, Table, Tag } from 'antd';
 const columns = [
     {
         title: 'Category',
-        dataIndex: 'image',
-        key: 'category',
-        render: (image) => image['category']
+        dataIndex: 'name',
+        key: 'name'
     },
     {
         title: 'Token ID',
@@ -17,30 +16,6 @@ const columns = [
         dataIndex: 'username',
         key: 'username'
     }
-];
-
-const data = [
-    {
-        key: '1',
-        name: 'John Brown',
-        age: 32,
-        address: 'New York No. 1 Lake Park',
-        tags: ['nice', 'developer'],
-    },
-    {
-        key: '2',
-        name: 'Jim Green',
-        age: 42,
-        address: 'London No. 1 Lake Park',
-        tags: ['loser'],
-    },
-    {
-        key: '3',
-        name: 'Joe Black',
-        age: 32,
-        address: 'Sydney No. 1 Lake Park',
-        tags: ['cool', 'teacher'],
-    },
 ];
 
 function ResponsesTable() {
@@ -55,7 +30,7 @@ function ResponsesTable() {
                 const newCols = columns
                 Object.keys(data[0]).forEach((col, index) => {
                     console.log('key', col)
-                    if (!['image', 'username', 'token_id'].includes(col)) {
+                    if (!['image', 'username', 'name', 'token_id'].includes(col)) {
                         console.log('adding column', col)
                         newCols.push({
                             title: col,
@@ -79,6 +54,10 @@ function ResponsesTable() {
 
         fetchData();
     }, []);
+
+    if (!tableData) {
+        return <div>Loading...</div>;
+    }
 
 
     return <Table
