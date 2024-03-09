@@ -10,17 +10,18 @@ function insertNewLine(str, interval) {
 const urlStem = 'https://earthnetcdn.com/stats/'
 // const urlStem = 'http://localhost:8000/stats/'
 
-function AggregatedStats() {
+function ClusterStats() {
     const [chartData, setChartData] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch(urlStem + 'survey-stats/2');
+                const response = await fetch(urlStem + 'responses-by-cluster/2');
                 const text = await response.text()
-                const data = JSON.parse(text);
+                const clusterData = JSON.parse(text);
+                console.log({clusterData})
                 // Process and set your data here
-                setChartData(data);
+                setChartData(clusterData);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -71,15 +72,19 @@ function AggregatedStats() {
 
     return (
         <div className="aggregated-charts">
-            {Object.keys(chartData).map((question, index) => {
-                const data = createHistogramData(chartData[question]);
-                console.log({data})
+            {Object.keys(chartData).map((cluster, index) => {
                 return (
                     <div>
-                        <div className="aggregated-chart">
-                            <div className="chart-title"><h3>{question}</h3></div>
-                            <Bar data={data} title={"Histogram " + index} options={options} key={index}/>
-                        </div>
+                        {cluster}
+                        {Object.keys(chartData[cluster]).map((question, index) => {
+                            const data = createHistogramData(chartData[cluster][question]);
+                            console.log({data})
+                            return (
+                                <div className="aggregated-chart">
+                                    <div className="chart-title"><h3>{question}</h3></div>
+                                    <Bar data={data} title={"Histogram " + index} options={options} key={index}/>
+                                </div>
+                                )})}
                     </div>
                 )
             })}
@@ -87,4 +92,4 @@ function AggregatedStats() {
     )
 }
 
-export default AggregatedStats;
+export default ClusterStats;
