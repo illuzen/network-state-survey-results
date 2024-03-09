@@ -7,14 +7,19 @@ function insertNewLine(str, interval) {
     return str.replace(regex, '$1\n');
 }
 
+const urlStem = 'https://earthnetcdn.com/stats/'
+// const urlStem = 'http://localhost:8000/stats/'
+
 function AggregatedStats() {
     const [chartData, setChartData] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('https://earthnetcdn.com/stats/collection-stats/7');
-                const data = await response.json();
+                const response = await fetch(urlStem + 'survey-stats/2');
+                // const json = await response.json()
+                const text = await response.text()
+                const data = JSON.parse(text);
                 // Process and set your data here
                 setChartData(data);
             } catch (error) {
@@ -27,11 +32,11 @@ function AggregatedStats() {
 
     const labels = ['Strongly Agree', 'Agree', 'Disagree', 'Strongly Disagree']
     // Function to create data structure for each histogram
-    const createHistogramData = (dataset) => {
+    const createHistogramData = (item) => {
         return {
             labels: labels,
             datasets: [{
-                data: labels.map(x => dataset[x]),
+                data: labels.map(label => item[label]),
                 backgroundColor: 'rgba(99, 199, 221, 0.4)',
                 // backgroundColor: 'rgba(75, 192, 192, 0.2)',
                 borderColor: 'rgba(75, 192, 192, 1)',
@@ -43,6 +48,8 @@ function AggregatedStats() {
     if (!chartData) {
         return <div>Loading...</div>;
     }
+
+    console.log({chartData})
 
     const options = {
         scales: {
@@ -65,12 +72,13 @@ function AggregatedStats() {
 
     return (
         <div className="aggregated-charts">
-            {chartData.map((item, index) => {
-                const data = createHistogramData(item);
+            {Object.keys(chartData).map((question, index) => {
+                const data = createHistogramData(chartData[question]);
+                console.log({data})
                 return (
                     <div>
                         <div className="aggregated-chart">
-                            <div className="chart-title"><h3>{item['Prompt']}</h3></div>
+                            <div className="chart-title"><h3>{question}</h3></div>
                             <Bar data={data} title={"Histogram " + index} options={options} key={index}/>
                         </div>
                     </div>
