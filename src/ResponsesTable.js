@@ -20,25 +20,27 @@ const nameMapping = {
     'question': 'Question'
 }
 
-const urlStem = 'https://earthnetcdn.com/stats'
-const taskId = 2
-
 // Filter `option.label` match the user type `input`
 const filterOption = (input, option) =>
     (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
 
 
-function ResponsesTable() {
+function ResponsesTable(props) {
     const [tableData, setTableData] = useState(null);
     const [tableCols, setTableCols] = useState(null);
     const [searchOptions, setSearchOptions] = useState(null);
     const [chosenUser, setChosenUser] = useState(null);
     const [allUsers, setAllUsers] = useState(null);
+    const {taskId, urlStem} = props
+    console.log({taskId, urlStem})
 
     useEffect(() => {
-        const fetchUser = async () => {
+        const fetchUsers = async () => {
             try {
-                const response = await fetch(urlStem + '/all-usernames/' + taskId);
+                console.log({taskId, urlStem})
+                const url = urlStem + '/all-users/' + taskId
+                const response = await fetch(url)
+                console.log({url, response})
                 const users = await response.json();
                 console.log({users})
                 const all = {}
@@ -54,7 +56,7 @@ function ResponsesTable() {
             }
         };
 
-        fetchUser();
+        fetchUsers();
     }, []);
 
     useEffect(() => {
@@ -68,6 +70,7 @@ function ResponsesTable() {
                 const url = urlStem + '/individual-responses/' + taskId + '/' + username
                 console.log({url})
                 const fetched = await fetch(url);
+                console.log({fetched})
                 const responses = await fetched.json();
                 console.log({responses})
 

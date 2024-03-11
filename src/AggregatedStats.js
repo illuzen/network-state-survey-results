@@ -1,23 +1,15 @@
 import React, {useEffect, useState} from "react";
 import {Bar} from "react-chartjs-2";
 
-
-function insertNewLine(str, interval) {
-    const regex = new RegExp(`(.{${interval}})`, 'g');
-    return str.replace(regex, '$1\n');
-}
-
-const urlStem = 'https://earthnetcdn.com/stats/'
-// const urlStem = 'http://localhost:8000/stats/'
-
-function AggregatedStats() {
+function AggregatedStats(props) {
     const [chartData, setChartData] = useState(null);
+
+    const {taskId, urlStem} = props
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch(urlStem + 'survey-stats/2');
-                // const json = await response.json()
+                const response = await fetch(urlStem + '/survey-stats/' + taskId);
                 const text = await response.text()
                 const data = JSON.parse(text);
                 // Process and set your data here

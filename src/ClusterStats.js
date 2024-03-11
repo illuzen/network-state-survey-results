@@ -7,16 +7,14 @@ function insertNewLine(str, interval) {
     return str.replace(regex, '$1\n');
 }
 
-const urlStem = 'https://earthnetcdn.com/stats/'
-// const urlStem = 'http://localhost:8000/stats/'
-
-function ClusterStats() {
+function ClusterStats(props) {
     const [chartData, setChartData] = useState(null);
+    const {taskId, urlStem} = props
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch(urlStem + 'responses-by-cluster/2');
+                const response = await fetch(urlStem + '/responses-by-cluster/' + taskId);
                 const text = await response.text()
                 const clusterData = JSON.parse(text);
                 console.log({clusterData})
