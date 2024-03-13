@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import './App.css';
+import './styles.css';
 import { Chart as ChartJS, registerables } from 'chart.js';
 import { Tabs, Select, Card } from 'antd';
 import ResponsesTable from './ResponsesTable'
