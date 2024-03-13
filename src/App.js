@@ -8,8 +8,8 @@ import ClusterStats from "./ClusterStats";
 
 ChartJS.register(...registerables);
 
-// const urlStem = 'https://earthnetcdn.com/stats'
-const urlStem = 'http://localhost:8000/stats'
+const urlStem = 'https://earthnetcdn.com/stats'
+// const urlStem = 'http://localhost:8000/stats'
 
 const filterOption = (input, option) =>
     (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
