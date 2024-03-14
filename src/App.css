@@ -37,9 +37,16 @@
   }
 }
 
+/* Outer wrapper for centering the tabs container */
+.center-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
 .tabs-container {
-  text-align: center;
-  padding-left: 200px;
+  max-width: 800px;
+  padding-left: 0px;
+  min-height: 500px;
 }
 
 /* Center the Tabs */

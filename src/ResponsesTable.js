@@ -1,5 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { Table, Select, Card } from 'antd';
+import {Route, Routes, useParams, useNavigate} from "react-router-dom";
+import Survey from "./Survey";
 
 const omitColumns = [
     'image',
@@ -25,46 +27,20 @@ const filterOption = (input, option) =>
     (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
 
 
-function ResponsesTable(props) {
+const UserResponse = (props) => {
+    let { taskId, chosenUser, urlStem } = props
+    let { username } = useParams(); // This captures the username from the URL
     const [tableData, setTableData] = useState(null);
     const [tableCols, setTableCols] = useState(null);
-    const [searchOptions, setSearchOptions] = useState(null);
-    const [chosenUser, setChosenUser] = useState(null);
-    const [allUsers, setAllUsers] = useState(null);
-    const {taskId, urlStem} = props
-    console.log({taskId, urlStem})
+    // Fetch user-specific data here based on `username`, or pass it down to child components
+
+    console.log('UserResponse')
 
     useEffect(() => {
-        const fetchUsers = async () => {
-            try {
-                console.log({taskId, urlStem})
-                const url = urlStem + '/all-users/' + taskId
-                const response = await fetch(url)
-                console.log({url, response})
-                const users = await response.json();
-                console.log({users})
-                const all = {}
-                users.forEach(user => {
-                    all[user.username] = user
-                })
-                setAllUsers(all)
-                const formatted = users.map(x => { return { value: x.username, label: x.username }})
-                console.log({formatted})
-                setSearchOptions(formatted)
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        };
-
-        fetchUsers();
-    }, []);
-
-    useEffect(() => {
-        const fetchIndividualData = async (user) => {
-            if (user == null) {
+        const fetchIndividualData = async (username) => {
+            if (username == null) {
                 return
             }
-            const username = user.username
 
             try {
                 const url = urlStem + '/individual-responses/' + taskId + '/' + username
@@ -100,37 +76,97 @@ function ResponsesTable(props) {
             }
         };
 
-        fetchIndividualData(chosenUser);
-    }, [chosenUser]);
+        fetchIndividualData(username);
+    }, [username]);
+
+    return (
+        <div>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <Card title={chosenUser.username} style={{ width: 300 }}>
+                    <p>Cluster: {chosenUser.cluster}</p>
+                    <p>Token ID: {chosenUser.token_id}</p>
+                    <p>Farcaster ID: {chosenUser.user_fid}</p>
+                </Card>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+                { tableData ?
+                    <Table
+                        columns={tableCols}
+                        dataSource={tableData}
+                        pagination={{ pageSize: 50 }}  // Set the number of rows per page
+                    /> : null }
+            </div>
+            <Routes>
+                <Route path="/:username/*" element={<Survey urlStem={urlStem}/>} />
+            </Routes>
+
+        </div>
+    );
+};
+
+
+function ResponsesTable(props) {
+    const [searchOptions, setSearchOptions] = useState(null);
+    const [chosenUser, setChosenUser] = useState(null);
+    const [allUsers, setAllUsers] = useState(null);
+    const navigate = useNavigate();
+    const {taskId, urlStem} = props
+    console.log({taskId, urlStem})
+
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                console.log({taskId, urlStem})
+                const url = urlStem + '/all-users/' + taskId
+                const response = await fetch(url)
+                console.log({url, response})
+                const users = await response.json();
+                console.log({users})
+                const all = {}
+                users.forEach(user => {
+                    all[user.username] = user
+                })
+                setAllUsers(all)
+                const formatted = users.map(x => { return { value: x.username, label: x.username }})
+                console.log({formatted})
+                setSearchOptions(formatted)
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchUsers();
+    }, []);
+
+
+    const handleSelection = async (username) => {
+        setChosenUser(allUsers[username])
+        navigate(`/${taskId}/individualResponses/${username}`)
+    }
+
 
     if (!searchOptions) {
         return <div>Loading...</div>;
     }
 
-
     return (
         <div>
-            <Select
-                showSearch
-                placeholder="Select a username"
-                optionFilterProp="children"
-                onChange={(value) => setChosenUser(allUsers[value])}
-                onSearch={(value) => console.log({value})}
-                filterOption={filterOption}
-                options={searchOptions}
-            />
-            { chosenUser ?
-                <Card title={chosenUser.username} style={{ width: 300 }}>
-                    <p>Cluster: {chosenUser.cluster}</p>
-                    <p>Token ID: {chosenUser.token_id}</p>
-                    <p>Farcaster ID: {chosenUser.user_fid}</p>
-                </Card> : null }
-            { tableData ?
-                <Table
-                    columns={tableCols}
-                    dataSource={tableData}
-                    pagination={{ pageSize: 50 }}  // Set the number of rows per page
-                /> : null }
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <Select
+                    showSearch
+                    placeholder="Select a username"
+                    optionFilterProp="children"
+                    onChange={handleSelection}
+                    onSearch={(value) => console.log({value})}
+                    filterOption={filterOption}
+                    options={searchOptions}
+                />
+            </div>
+
+            <Routes>
+                <Route path=":username" element={<UserResponse taskId={taskId} chosenUser={chosenUser} urlStem={urlStem} />} />
+            </Routes>
+
         </div>
     );
 }

@@ -1,5 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Bar} from "react-chartjs-2";
+import { Row, Col, Card, Typography, Divider } from 'antd';
+const { Title } = Typography;
 
 
 function insertNewLine(str, interval) {
@@ -73,7 +75,8 @@ function ClusterStats(props) {
             {Object.keys(chartData).map((cluster, index) => {
                 return (
                     <div>
-                        {cluster}
+                        <Title level={4} style={{ textAlign: 'center', margin: '20px 0', paddingTop: '50px' }}>{cluster}</Title>
+
                         {Object.keys(chartData[cluster]).map((question, index) => {
                             const data = createHistogramData(chartData[cluster][question]);
                             console.log({data})
