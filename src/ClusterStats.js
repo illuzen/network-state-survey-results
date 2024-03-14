@@ -79,7 +79,6 @@ function ClusterStats(props) {
 
                         {Object.keys(chartData[cluster]).map((question, index) => {
                             const data = createHistogramData(chartData[cluster][question]);
-                            console.log({data})
                             return (
                                 <div className="aggregated-chart">
                                     <div className="chart-title"><h3>{question}</h3></div>

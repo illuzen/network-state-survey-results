@@ -19,8 +19,7 @@ function Survey(props) {
                 const t = await response.json();
                 console.log({t})
                 setTask(t[0])
-                navigate(`/${surveyId}/aggregatedStats`);
-
+                // navigate(`/${surveyId}/aggregatedStats`);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -45,6 +44,7 @@ function Survey(props) {
         // More items as needed
     ];
 
+    console.log({items, location})
     const activeKey = items.find(item => location.pathname.includes(item.key))?.key || items[0].key;
 
     return (

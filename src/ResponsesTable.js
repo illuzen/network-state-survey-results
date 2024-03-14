@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { Table, Select, Card } from 'antd';
-import {Route, Routes, useParams, useNavigate} from "react-router-dom";
+import {Route, Routes, useParams, useNavigate, useLocation} from "react-router-dom";
 import Survey from "./Survey";
 
 const omitColumns = [
@@ -34,7 +34,7 @@ const UserResponse = (props) => {
     const [tableCols, setTableCols] = useState(null);
     // Fetch user-specific data here based on `username`, or pass it down to child components
 
-    console.log('UserResponse')
+    console.log({username, taskId, chosenUser, urlStem})
 
     useEffect(() => {
         const fetchIndividualData = async (username) => {
@@ -110,8 +110,14 @@ function ResponsesTable(props) {
     const [chosenUser, setChosenUser] = useState(null);
     const [allUsers, setAllUsers] = useState(null);
     const navigate = useNavigate();
+    const location = useLocation(); // To get the current location
     const {taskId, urlStem} = props
-    console.log({taskId, urlStem})
+    console.log({taskId, urlStem, location})
+    const components = location.pathname.split('/')
+    let username = null
+    if (components.length > 2 && components[components.length - 2] === 'individualResponses') {
+        username = components[components.length - 1]
+    }
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -130,6 +136,10 @@ function ResponsesTable(props) {
                 const formatted = users.map(x => { return { value: x.username, label: x.username }})
                 console.log({formatted})
                 setSearchOptions(formatted)
+                if (username) {
+                    setChosenUser(all[username])
+                }
+
             } catch (error) {
                 console.error('Error fetching data:', error);
             }

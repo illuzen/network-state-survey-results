@@ -66,7 +66,6 @@ function AggregatedStats(props) {
         <div className="aggregated-charts">
             {Object.keys(chartData).map((question, index) => {
                 const data = createHistogramData(chartData[question]);
-                console.log({data})
                 return (
                     <div>
                         <div className="aggregated-chart">
