@@ -138,6 +138,7 @@ function ResponsesTable(props) {
                 setSearchOptions(formatted)
                 if (username) {
                     setChosenUser(all[username])
+                    // TODO: make the select already show username in this case
                 }
 
             } catch (error) {

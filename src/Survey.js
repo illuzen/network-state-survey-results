@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { useParams, useNavigate, Routes, Route, Link, useLocation } from 'react-router-dom';
+import { useParams, useNavigate, Routes, Route, useLocation } from 'react-router-dom';
 import {Card, Tabs} from "antd";
 import AggregatedStats from "./AggregatedStats";
 import ClusterStats from "./ClusterStats";
@@ -19,7 +19,11 @@ function Survey(props) {
                 const t = await response.json();
                 console.log({t})
                 setTask(t[0])
-                // navigate(`/${surveyId}/aggregatedStats`);
+                const components = location.pathname.split('/')
+                // if we are not in a url that has already selected a tab, then select the first tab
+                if (components.length > 1 && components[components.length - 1] === surveyId) {
+                    navigate(`/${surveyId}/aggregatedStats`);
+                }
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -37,6 +41,7 @@ function Survey(props) {
         return <div>Loading...</div>;
     }
 
+    // TODO: the tabs are still jumping around based on the size of the children
     const items = [
         { label: "Aggregated Stats", key: "aggregatedStats" },
         { label: "Clustered Stats", key: "clusteredStats" },

@@ -8,8 +8,8 @@ import SurveySelect from './SurveySelect';
 
 ChartJS.register(...registerables);
 
-// const urlStem = 'https://earthnetcdn.com/stats'
-const urlStem = 'http://localhost:8000/stats'
+const urlStem = 'https://earthnetcdn.com/stats'
+// const urlStem = 'http://localhost:8000/stats'
 
 function App() {
 
