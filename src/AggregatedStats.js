@@ -30,10 +30,10 @@ function AggregatedStats(props) {
             datasets: [{
                 data: labels.map(label => item[label]),
                 backgroundColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)'
+                    '#45B3B5', // Cyan
+                    '#1B6178', // Dark cyan
+                    '#1A7EA5', // Sky blue
+                    '#0F3A4E', // Deep sea blue
                 ],
                 borderColor: 'transparent',
             }],
@@ -53,6 +53,12 @@ function AggregatedStats(props) {
                 grid: {
                     color: 'transparent',
                 },
+                ticks: {
+                    color: '#FFFFFF', // Ensures text labels are white
+                    font: {
+                        weight: 'bold' // Makes the labels bold
+                    },
+                }
             },
             y: {
                 type: 'linear',
@@ -62,6 +68,10 @@ function AggregatedStats(props) {
                 },
                 ticks: {
                     stepSize: 1,
+                    color: '#FFFFFF', // Ensures text labels are white
+                    font: {
+                        weight: 'bold' // Makes the labels bold
+                    },
                     callback: function(value) {
                         if (Number.isInteger(value)) {
                             return value.toString();
@@ -69,6 +79,11 @@ function AggregatedStats(props) {
                         return value.toFixed(1);
                     }
                 }
+            }
+        },
+        layout: {
+            padding: {
+                bottom: 30 // Adjusts padding at the bottom to ensure labels fit
             }
         },
         responsive: true,
