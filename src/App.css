@@ -57,8 +57,7 @@
 
 .aggregated-charts {
   /*display: grid;*/
-  display: flex;
-  flex-wrap: wrap; /* This allows items to wrap to the next line */
+  display: block;
   grid-template-columns: repeat(auto-fill, minmax(100%, 1fr)); /* Default: 1 column */
 }
 
