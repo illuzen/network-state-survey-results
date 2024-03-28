@@ -56,8 +56,8 @@
 
 
 .aggregated-charts {
-  /*display: grid;*/
-  display: block;
+  display: flex;
+  flex-wrap: wrap;
   grid-template-columns: repeat(auto-fill, minmax(100%, 1fr)); /* Default: 1 column */
 }
 
